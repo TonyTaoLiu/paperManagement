@@ -15,7 +15,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 use_llm = "--llm" in sys.argv
-weights = next((tuple(float(x) for x in a.split("=")[1].split(",")) for a in sys.argv if a.startswith("--weights=")), None)
+weights = next(
+    (tuple(float(x) for x in a.split("=")[1].split(",")) for a in sys.argv if a.startswith("--weights=")), None
+)
 tau = next((float(a.split("=")[1]) for a in sys.argv if a.startswith("--tau=")), None)
 out_dir = ROOT / "data" / "eval"
 os.environ["PAPERMIND_DATA_DIR_REAL"] = os.environ.get("PAPERMIND_DATA_DIR", str(ROOT / "data"))

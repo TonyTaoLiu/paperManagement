@@ -25,3 +25,16 @@ jobs:
           python-version: "3.12"
       - name: Smoke test start script
         run: python scripts/smoke.py
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --frozen
+      - run: uv run --with pyinstaller pyinstaller packaging.spec --noconfirm
+      - run: uv run python scripts/smoke_frozen.py
