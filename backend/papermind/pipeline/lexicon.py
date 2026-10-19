@@ -101,3 +101,40 @@ def spot_principles(text: str) -> list[str]:
         if p not in seen:
             seen.append(p)
     return seen
+
+
+# Methodological principles the user repeatedly applies (docs 1.2). A principle fires on a paper when
+# every regex group matches somewhere in the paper's summary or follow-ups. Free-form principles written
+# as `X ≠ Y` in the text are picked up by `spot_principles` and by the LLM in addition.
+PRINCIPLE_TRIGGERS: dict[str, list[str]] = {
+    "temporal precedence ≠ causality": [r"时间先后|先后顺序|时序|先行|领先|temporal|precedence", r"因果|causal"],
+    "association ≠ mediation": [r"中介|mediat", r"相关|关联|associat"],
+    "necessary node ≠ generator": [r"generator|发生器", r"不等于|不能|不一定|并非|必要|necessary"],
+    "same beta frequency ≠ same mechanism": [r"相同.{0,12}(频|PSD|peak)|same beta", r"同一|机制|generator"],
+}
+
+
+def detect_principles(text: str) -> list[str]:
+    return [name for name, pats in PRINCIPLE_TRIGGERS.items() if all(re.search(p, text, re.I) for p in pats)]
+
+
+_NAME_RE = re.compile(r"[A-Z][a-zA-Z'’-]+(?: [A-Z]\.)?(?: [A-Z][a-zA-Z'’-]+)+")
+_NOT_NAME = (
+    "Hospital", "Institute", "University", "Berlin", "Beijing", "Trial", "Parkinson", "Deep", "Brain",
+    "Medtronic", "Percept", "Digital", "Medicine", "Nature", "Cohort", "Technical", "Report", "Charité",
+    "Tiantan", "Generative", "Network", "Wilson", "Stimulation",
+)  # fmt: skip
+
+
+def spot_people(text: str) -> list[str]:
+    """Author/team names from lines that talk about authors (conservative, rule based)."""
+    out: list[str] = []
+    for line in text.splitlines():
+        if not re.search(r"作者|团队|通讯|第一作者|以.{0,12}为核心", line):
+            continue
+        for m in _NAME_RE.finditer(line):
+            name = m.group(0)
+            if any(w in name for w in _NOT_NAME) or name in out:
+                continue
+            out.append(name)
+    return out

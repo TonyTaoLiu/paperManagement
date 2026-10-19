@@ -1,7 +1,6 @@
 import numpy as np
 import pytest
 from fastapi.testclient import TestClient
-
 from papermind.db.core import connect, init_db
 from papermind.embed.index import ensure_paper_embeddings
 from papermind.main import create_app
@@ -39,7 +38,9 @@ def conn(monkeypatch):
 
 
 def _paper(conn, title, one_liner=""):
-    cur = conn.execute("INSERT INTO paper(title, title_norm, one_liner) VALUES (?,?,?)", (title, title.lower(), one_liner))
+    cur = conn.execute(
+        "INSERT INTO paper(title, title_norm, one_liner) VALUES (?,?,?)", (title, title.lower(), one_liner)
+    )
     conn.commit()
     return cur.lastrowid
 

@@ -11,7 +11,13 @@ from papermind.llm.schemas import (
     PaperExtraction,
     extract_user_prompt,
 )
-from papermind.pipeline.lexicon import normalize_entity, spot_entities, spot_principles
+from papermind.pipeline.lexicon import (
+    detect_principles,
+    normalize_entity,
+    spot_entities,
+    spot_people,
+    spot_principles,
+)
 
 TYPE_RULES = [
     ("综述", ("综述", "review")),
@@ -95,14 +101,23 @@ def key_numbers(text: str, limit: int = 12) -> list[str]:
 def rule_extract(session: PaperSession) -> Extracted:
     main = main_turn(session)
     text = main.assistant
-    ent = {k: [normalize_entity(k, n) for n in v] for k, v in spot_entities(text + "\n" + session.title).items()}
+    thread = "\n".join(t.assistant for t in [*session.turns, *session.followups])  # follow-ups mention devices etc.
+    ent = {k: [normalize_entity(k, n) for n in v] for k, v in spot_entities(thread + "\n" + session.title).items()}
     sample = re.search(r"(\d+)\s*名[^，。；,;]{0,12}(?:患者|被试|受试者|人)", text)
+    people = spot_people(text)
+    if people:
+        ent["author"] = people
     ex = Extracted(
         title=session.title,
         paper_type=guess_paper_type(text),
         one_liner=guess_one_liner(text),
         entities=ent,
-        principles=spot_principles(text),
+        principles=spot_principles(text)
+        + [
+            p
+            for p in detect_principles("\n".join(t.assistant for t in [*session.turns, *session.followups]))
+            if p not in spot_principles(text)
+        ],
         sample_size=sample.group(0) if sample else "",
         verification=guess_verification(session),
         sections=split_sections(text),
