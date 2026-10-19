@@ -22,9 +22,7 @@ def main() -> None:
     if args.cmd == "serve":
         if args.open:
             url = f"http://{args.host}:{args.port}"
-            threading.Thread(
-                target=lambda: (time.sleep(1.5), webbrowser.open(url)), daemon=True
-            ).start()
+            threading.Thread(target=lambda: (time.sleep(1.5), webbrowser.open(url)), daemon=True).start()
         uvicorn.run(
             "papermind.main:create_app",
             factory=True,
