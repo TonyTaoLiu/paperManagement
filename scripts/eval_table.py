@@ -15,7 +15,7 @@ for n in (5, 19):
     print("| 模型 | JSON合法率 | 文献类型准确 | 模态召回 | 方法召回 | 抽取可溯源率 | 分类Top-1 | 分类Top-3 | 生成速度 tok/s | 单篇抽取秒 | 峰值内存 MB |")
     print("|---|---|---|---|---|---|---|---|---|---|---|")
     for s in rows:
-        print(f"| {s['model']} | {pct(s['json_valid_rate'])} | {pct(s['type_acc'])} | {pct(s['modality_recall'])} | {pct(s['method_recall'])} | {pct(s['grounded_rate'])} | {pct(s['cls_top1'])} | {pct(s['cls_top3'])} | {s['gen_tps']:.1f} | {s['extract_seconds']:.1f} | {s['peak_rss_mb']:.0f} |")  # noqa: E501
+        print(f"| {s['model']} | {pct(s['json_valid_rate'])} | {pct(s['type_acc'])} | {pct(s['modality_recall'])} | {pct(s['method_recall'])} | {pct(s['grounded_rate'])} | {pct(s['cls_top1'])} | {pct(s['cls_top3'])} | {(s['gen_tps'] or 0):.1f} | {(s['extract_seconds'] or 0):.1f} | {s['peak_rss_mb']:.0f} |")  # noqa: E501
 rows = [json.load(open(f)) for f in sorted(glob.glob(f"{d}/embed-*.json"))]
 if rows:
     print("\n### 嵌入模型（19 篇 / 20 条查询）\n")
