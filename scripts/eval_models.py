@@ -170,10 +170,13 @@ def eval_embed(args):
         doc_s = time.time() - t0
         qs = [spec.query_prefix + q for q, _ in GOLD["queries"]]
         Q = np.array(client.embed(qs), dtype=np.float32)
+        cat_texts = [spec.doc_prefix + f"{c[1]}：{c[2]}" for c in GOLD["categories"]]
+        C = np.array(client.embed(cat_texts), dtype=np.float32)
         peak = proc.peak_rss_mb()
     finally:
         proc.stop()
     D /= np.linalg.norm(D, axis=1, keepdims=True)
+    C /= np.linalg.norm(C, axis=1, keepdims=True)
     Q /= np.linalg.norm(Q, axis=1, keepdims=True)
     keys = [p["key"] for p in papers]
     sims = Q @ D.T
@@ -194,7 +197,15 @@ def eval_embed(args):
         for j in nn:
             votes[labels[j]] = votes.get(labels[j], 0) + float(S[i, j])
         knn3 += max(votes, key=votes.get) == labels[i]
+    # zero-shot: nearest category-description vector (no labelled papers used)
+    cat_ids = [c[0] for c in GOLD["categories"]]
+    zs1 = zs3 = 0
+    for i, k in enumerate(keys):
+        order = [cat_ids[j] for j in np.argsort(-(D[i] @ C.T))]
+        zs1 += order[0] == GOLD["papers"][k]["primary"]
+        zs3 += GOLD["papers"][k]["primary"] in order[:3]
     summary = {
+        "zeroshot_top1": zs1 / len(keys), "zeroshot_top3": zs3 / len(keys),
         "model": spec.id, "dim": int(D.shape[1]), "load_seconds": load_s,
         "query_top1": top1 / len(qs), "query_top3": top3 / len(qs),
         "knn1_acc": knn1 / len(keys), "knn3_acc": knn3 / len(keys),
