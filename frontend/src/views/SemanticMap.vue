@@ -34,7 +34,9 @@ onMounted(async () => {
       data: pts.filter((p) => p.category === c).map((p) => ({ value: [p.x, p.y], title: p.title, id: p.id })),
     })),
   })
-  chart.on('click', (p: any) => router.push(`/paper/${p.data.id}`))
+  chart.on('click', (p: any) => {
+    router.push(`/paper/${p.data.id}`)
+  })
   window.addEventListener('resize', () => chart?.resize())
 })
 onBeforeUnmount(() => chart?.dispose())

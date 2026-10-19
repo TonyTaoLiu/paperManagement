@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import threading
 
-from papermind.config import load_settings
+from papermind.config import data_dir, load_settings
 from papermind.llm.client import LLMClient
 from papermind.runtime.catalog import DEFAULT_TIERS, ModelSpec, get_model
 from papermind.runtime.downloader import ensure_model, models_dir
@@ -31,6 +31,7 @@ class ModelService:
         s = load_settings()
         return {
             "llama_server": str(find_existing() or ""),
+            "data_dir": str(data_dir()),
             "tier": s["memory_tier"],
             "llm": self._model_status("llm"),
             "embed": self._model_status("embed"),

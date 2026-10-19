@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from papermind import __version__
-from papermind.api import categories, graph, imports, models, papers, system
+from papermind.api import categories, graph, imports, library, models, papers, system
 from papermind.api import recommend as recommend_api
 from papermind.db.core import init_db
 
@@ -20,8 +20,10 @@ STATIC_DIR = Path(__file__).parent / "static"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     from papermind import scheduler
+    from papermind.services import backup
     from papermind.services.models import models as model_service
 
+    backup.startup_backup()
     scheduler.start()
     yield
     scheduler.stop()
@@ -37,6 +39,7 @@ def create_app() -> FastAPI:
     app.include_router(papers.router)
     app.include_router(categories.router)
     app.include_router(graph.router)
+    app.include_router(library.router)
     app.include_router(recommend_api.router)
 
     if (STATIC_DIR / "index.html").exists():

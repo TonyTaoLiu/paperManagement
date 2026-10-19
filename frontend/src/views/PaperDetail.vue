@@ -57,6 +57,7 @@ watch(() => props.id, load)
         <n-tag v-for="c in p.categories" :key="c.id" type="success" size="small">{{ c.name }}</n-tag>
         <a v-if="p.url" :href="p.url" target="_blank" rel="noopener">原文链接</a>
         <a v-if="p.code_url" :href="p.code_url" target="_blank" rel="noopener">代码</a>
+        <n-button size="small" @click="router.push({ path: '/graph', query: { view: 'paper', focus: p.id } })">在图谱中查看</n-button>
         <n-button size="small" @click="editing ? (editing = false) : startEdit()">{{ editing ? '取消编辑' : '编辑' }}</n-button>
       </n-space>
       <n-descriptions :column="3" size="small" style="margin-top: 12px">
