@@ -13,7 +13,7 @@ from papermind.embed.index import from_blob, to_blob
 from papermind.llm.schemas import CLASSIFY_SYSTEM, category_schema, classify_user_prompt
 from papermind.services import taxonomy
 
-W_SIM, W_KNN, W_LLM = 0.4, 0.3, 0.3
+W_SIM, W_KNN, W_LLM = 0.3, 0.2, 0.5  # tuned on the 19-paper set (docs/模型评测.md): LLM-heavy fusion
 AUTO_T, INBOX_T = 0.75, 0.5
 SOFTMAX_TAU = 0.02  # calibrated on the 19-paper set: sharper values keep auto-assignments precise
 KNN_K = 5
