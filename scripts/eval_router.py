@@ -66,11 +66,25 @@ for mode in ("zero_shot", "leave_one_out"):
         top1 += ranked[:1] == [want]
         top3 += want in ranked[:3]
         rows.append(
-            {"paper": pid, "gold": label[pid], "correct": ranked[:1] == [want], "decision": res.decision, "top": [s.name for s in res.suggestions[:3]]}
+            {
+                "paper": pid,
+                "gold": label[pid],
+                "correct": ranked[:1] == [want],
+                "decision": res.decision,
+                "top": [s.name for s in res.suggestions[:3]],
+            }
         )
         print(mode, pid, ranked[:1] == [want], res.decision, flush=True)
     auto = [r for r in rows if r["decision"] == "auto"]
-    result["modes"][mode] = {"top1": top1 / len(pids), "top3": top3 / len(pids), "rows": rows, "n_auto": len(auto), "auto_correct": sum(r["correct"] for r in auto), "n_inbox": sum(r["decision"] == "inbox" for r in rows), "tau": router.SOFTMAX_TAU}
+    result["modes"][mode] = {
+        "top1": top1 / len(pids),
+        "top3": top3 / len(pids),
+        "rows": rows,
+        "n_auto": len(auto),
+        "auto_correct": sum(r["correct"] for r in auto),
+        "n_inbox": sum(r["decision"] == "inbox" for r in rows),
+        "tau": router.SOFTMAX_TAU,
+    }
     m = result["modes"][mode]
     print("RESULT", mode, m["top1"], m["top3"], "auto", m["n_auto"], "inbox", m["n_inbox"], flush=True)
 (out_dir / f"router-{'llm' if use_llm else 'embed-only'}{'-tau' + str(tau) if tau else ''}.json").write_text(

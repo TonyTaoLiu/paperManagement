@@ -29,6 +29,7 @@ with sync_playwright() as p:
 
     if "m1" in stages:
         page.goto(BASE + "/import")
+        page.click("text=使用 LLM 精修")  # rule-based import here; the LLM path is exercised by scripts/full_e2e.py
         page.set_input_files("input[type=file]", "论文总结记录.md")
         page.wait_for_selector("#import-report", timeout=60000)
         shot(page, "m1-import")
@@ -51,7 +52,7 @@ with sync_playwright() as p:
         shot(page, "m2-categories")
         page.goto(BASE + "/inbox")
         page.click("#classify-btn")
-        page.wait_for_timeout(15000)
+        page.wait_for_selector(".n-alert--success-type", timeout=900000)
         shot(page, "m2-inbox")
     if "m3" in stages:
         for name, route in [
