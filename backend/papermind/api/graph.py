@@ -111,8 +111,15 @@ def get_digest(cid: int, conn: sqlite3.Connection = Depends(get_conn)) -> dict:
     d = digest_svc.get_digest(conn, cid)
     if d is None:
         prop = digest_svc.propose(conn, cid, None)
-        if not prop["content_md"]:
-            raise HTTPException(404, "no papers in this topic")
+        if not prop["content_md"]:  # empty topic: nothing to summarise yet (not an error)
+            return {
+                "category_id": cid,
+                "content_md": "",
+                "version": 0,
+                "updated_at": "",
+                "source_paper_ids": [],
+                "stale": False,
+            }
         d = digest_svc.save_digest(conn, cid, prop["content_md"], prop["source_paper_ids"])
     return d
 

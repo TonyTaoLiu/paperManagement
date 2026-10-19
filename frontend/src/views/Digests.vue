@@ -64,8 +64,8 @@ onMounted(loadCats)
             <n-button size="small" :loading="busy" @click="propose">重新生成（先预览差异）</n-button>
           </n-space>
         </template>
-        <Markdown v-if="digest" :source="digest.content_md" id="digest-body" />
-        <div v-else style="color: #888">这个主题下还没有论文。</div>
+        <Markdown v-if="digest?.content_md" :source="digest.content_md" id="digest-body" />
+        <div v-if="digest && !digest.content_md" style="color: #888">这个主题下还没有论文。</div>
       </n-card>
       <n-alert v-if="health.length" type="warning" title="健康检查">
         <div v-for="h in health" :key="h">· {{ h }}</div>

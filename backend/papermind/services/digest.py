@@ -73,7 +73,8 @@ def rule_draft(conn: sqlite3.Connection, pids: list[int]) -> dict[str, list[dict
         d["method_notes"].append({"text": f"`{name}`", "sources": sorted(ps)[:4]})
     for pid in pids:
         crit = _section_text(conn, pid, "critique")
-        first = next((ln.lstrip("-* ").strip() for ln in crit.splitlines() if ln.strip()), "")
+        first = next((ln.lstrip("-* ").strip().replace("**", "") for ln in crit.splitlines() if ln.strip()), "")
+        first = first.replace("：", "：", 1).lstrip("：")
         if first:
             d["open_questions"].append({"text": first[:180], "sources": [pid]})
     return {k: v[:6] for k, v in d.items()}

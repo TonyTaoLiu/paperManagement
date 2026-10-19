@@ -16,7 +16,8 @@ NO_ANSWER = "库中没有相关内容。"
 MIN_SEMANTIC = 0.30  # below this cosine (and with no keyword hit) the question is considered out of scope
 SYSTEM = (
     "你是研究者个人论文库的问答助手。只能根据给出的论文笔记回答；笔记里没有依据时必须回答“库中没有相关内容”，不要猜测。"
-    "每个论点后面用 [P编号] 标注来源论文，只能引用给出的编号。用中文回答，简洁。"
+    "每个论点后面用 [P编号] 标注来源论文，只能引用给出的编号。"
+    "如果笔记只能部分回答，先说明笔记里有的内容并标注来源，再说明缺少的部分。用中文回答，简洁。"
 )
 
 
@@ -136,7 +137,7 @@ def answer(conn: sqlite3.Connection, question: str, llm=None) -> dict:
     text, cited = clean_citations(text, allowed)
     if used and not cited and NO_ANSWER[:-1] not in text:
         text += "\n（提示：该回答没有引用来源，请对照下方相关论文核实。）"
-    shown = cited or ([] if NO_ANSWER[:-1] in text else [c["id"] for c in ctx[:3]])
+    shown = cited or ([] if text.strip() == NO_ANSWER else [c["id"] for c in ctx[:3]])
     return {
         "answer": text,
         "sources": [{"id": c["id"], "title": c["title"]} for c in ctx if c["id"] in shown],
