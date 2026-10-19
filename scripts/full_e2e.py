@@ -41,21 +41,27 @@ def wait(task, label, timeout=3600):
 
 
 report = {}
+START = next((a.split("=")[1] for a in sys.argv if a.startswith("--from=")), "import")
+if START == "relations":
+    report = json.load(open("data/eval/full_e2e.json")) if False else {}
 paste = open("tests/fixtures/论文总结记录.md", encoding="utf-8").read().split("## 06.")[0].split("## 02.")[1]
 paste = "## 02." + paste
 sample = "Decoding alignment without encoding alignment\n\n" + paste
-t = wait(call("/import/text", "POST", {"text": sample, "use_llm": True}), "llm-import-single")
-report["llm_import"] = t["result"]
-assert t["status"] == "done" and t["result"]["used_llm"], "LLM extraction did not run"
-p = call("/papers/1")
-report["llm_extracted_paper"] = {k: p[k] for k in ("title", "paper_type", "one_liner")} | {"entities": p["entities"]}
-call("/papers/1", "DELETE")
-text = open("论文总结记录.md", encoding="utf-8").read()
-report["import_full"] = wait(
-    call("/import/text", "POST", {"text": text, "use_llm": False, "filename": "论文总结记录.md"}), "import-full"
-)["result"]
-call("/categories/preset", "POST")
-report["classify"] = wait(call("/classify", "POST", {}), "classify")["result"]
+if START == "import":
+    t = wait(call("/import/text", "POST", {"text": sample, "use_llm": True}), "llm-import-single")
+    report["llm_import"] = t["result"]
+    assert t["status"] == "done" and t["result"]["used_llm"], "LLM extraction did not run"
+    p = call("/papers/1")
+    report["llm_extracted_paper"] = {k: p[k] for k in ("title", "paper_type", "one_liner")} | {
+        "entities": p["entities"]
+    }
+    call("/papers/1", "DELETE")
+    text = open("论文总结记录.md", encoding="utf-8").read()
+    report["import_full"] = wait(
+        call("/import/text", "POST", {"text": text, "use_llm": False, "filename": "论文总结记录.md"}), "import-full"
+    )["result"]
+    call("/categories/preset", "POST")
+    report["classify"] = wait(call("/classify", "POST", {}), "classify")["result"]
 report["relations"] = wait(call("/relations/rebuild?use_llm=true", "POST"), "relations")["result"]
 report["recommend"] = wait(call("/recommendations/refresh", "POST"), "recommend")
 rec = call("/recommendations?limit=10")

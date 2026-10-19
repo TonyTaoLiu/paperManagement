@@ -76,6 +76,7 @@ def patch_paper(pid: int, body: PaperPatch, conn: sqlite3.Connection = Depends(g
 @router.delete("/papers/{pid}")
 def delete_paper(pid: int, conn: sqlite3.Connection = Depends(get_conn)) -> dict:
     conn.execute("DELETE FROM paper_fts WHERE rowid = ?", (pid,))
+    conn.execute("DELETE FROM embedding WHERE owner_type = 'paper' AND owner_id = ?", (pid,))
     conn.execute("DELETE FROM paper WHERE id = ?", (pid,))
     conn.commit()
     return {"ok": True}

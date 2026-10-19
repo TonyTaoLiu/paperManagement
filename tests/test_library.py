@@ -104,3 +104,23 @@ def test_fsrs_scheduler(conn):
     assert review.retrievability(0, 5) == pytest.approx(1.0) and 0.89 < review.retrievability(5, 5) < 0.91
     with pytest.raises(ValueError):
         review.answer_card(conn, pid, 7)
+
+
+def test_deleting_a_paper_drops_its_embedding(conn):
+    from papermind.embed.index import load_matrix, to_blob
+
+    for pid in (1, 2):
+        conn.execute(
+            "INSERT INTO embedding(owner_type, owner_id, model, text_hash, dim, vector) VALUES ('paper',?,'m','',2,?)",
+            (pid, to_blob([1.0, 0.0])),
+        )  # noqa: E501
+    conn.commit()
+    client = TestClient(create_app())
+    assert client.delete("/api/papers/1").status_code == 200
+    assert load_matrix(conn, "m")[0] == [2]
+    conn.execute(
+        "INSERT INTO embedding(owner_type, owner_id, model, text_hash, dim, vector) VALUES ('paper',999,'m','',2,?)",
+        (to_blob([0.0, 1.0]),),
+    )  # stale
+    conn.commit()
+    assert load_matrix(conn, "m")[0] == [2]  # orphans never reach relation building

@@ -65,7 +65,9 @@ def ensure_paper_embeddings(
 
 def load_matrix(conn: sqlite3.Connection, model: str, owner_type: str = "paper") -> tuple[list[int], np.ndarray]:
     rows = conn.execute(
-        "SELECT owner_id, vector FROM embedding WHERE owner_type=? AND model=? ORDER BY owner_id", (owner_type, model)
+        "SELECT e.owner_id, e.vector FROM embedding e WHERE e.owner_type=? AND e.model=? "
+        "AND (e.owner_type != 'paper' OR e.owner_id IN (SELECT id FROM paper)) ORDER BY e.owner_id",
+        (owner_type, model),
     ).fetchall()
     if not rows:
         return [], np.zeros((0, 0), dtype=np.float32)
