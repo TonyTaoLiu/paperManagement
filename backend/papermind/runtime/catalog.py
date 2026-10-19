@@ -28,10 +28,10 @@ LLM_MODELS: dict[str, ModelSpec] = {
         ModelSpec("minicpm5-1b", "llm", "openbmb/MiniCPM5-1B-GGUF", "MiniCPM5-1B-Q4_K_M.gguf", 0.69),
         ModelSpec("minicpm5-2b", "llm", "openbmb/MiniCPM5-2B-GGUF", "MiniCPM5-2B-Q4_K_M.gguf", 1.56),
         ModelSpec("qwen3.5-2b", "llm", "unsloth/Qwen3.5-2B-GGUF", "Qwen3.5-2B-Q4_K_M.gguf", 1.28),
-        ModelSpec("qwen3.5-4b", "llm", "unsloth/Qwen3.5-4B-GGUF", "Qwen3.5-4B-Q4_K_M.gguf", 2.74),
+        ModelSpec("qwen3.5-4b", "llm", "unsloth/Qwen3.5-4B-GGUF", "Qwen3.5-4B-Q4_K_M.gguf", 2.74, 6144),
         ModelSpec("gemma4-e4b", "llm", "unsloth/gemma-4-E4B-it-GGUF", "gemma-4-E4B-it-Q4_K_M.gguf", 4.98),
         ModelSpec("lfm2.5-8b-a1b", "llm", "LiquidAI/LFM2.5-8B-A1B-GGUF", "LFM2.5-8B-A1B-Q4_K_M.gguf", 5.16),
-        ModelSpec("qwen3.5-9b", "llm", "unsloth/Qwen3.5-9B-GGUF", "Qwen3.5-9B-Q4_K_M.gguf", 5.68),
+        ModelSpec("qwen3.5-9b", "llm", "unsloth/Qwen3.5-9B-GGUF", "Qwen3.5-9B-Q4_K_M.gguf", 5.68, 6144),
     ]
 }
 
@@ -63,8 +63,8 @@ EMBED_MODELS: dict[str, ModelSpec] = {
 
 # Defaults per memory tier; finalised from the measurements in docs/模型评测.md.
 DEFAULT_TIERS = {
-    "8gb": {"llm": "minicpm5-2b", "embed": "qwen3-embedding-0.6b"},
-    "16gb": {"llm": "qwen3.5-9b", "embed": "qwen3-embedding-0.6b"},
+    "8gb": {"llm": "qwen3.5-4b", "embed": "embeddinggemma-2"},
+    "16gb": {"llm": "qwen3.5-9b", "embed": "embeddinggemma-2"},
 }
 
 
