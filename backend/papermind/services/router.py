@@ -117,7 +117,7 @@ def llm_scores(conn, client, paper, cats, examples: dict[int, list[str]]) -> dic
     text = (paper["one_liner"] or "") + "\n" + "\n".join(s["content_md"] for s in secs)
     r = client.chat(
         [{"role": "system", "content": CLASSIFY_SYSTEM}, {"role": "user", "content": classify_user_prompt(lines, paper["title"], text[:3000])}],
-        schema=category_schema(ids), max_tokens=80, retries=1,
+        schema=category_schema(ids), max_tokens=80, retries=1, temperature=0.0,
     )  # fmt: skip
     rank = [int(x) for x in r.parsed.ranking[:3]]
     conf = min(max(r.parsed.confidence, 0.0), 1.0)

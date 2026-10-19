@@ -9,3 +9,5 @@ frontend/dist/
 *.egg-info/
 .env
 data-smoke/
+build/
+dist/
