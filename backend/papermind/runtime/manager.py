@@ -50,7 +50,7 @@ class LlamaProcess:
         cmd = [
             str(self.binary), "-m", str(self.model), "--host", "127.0.0.1",
             "--port", str(self.port), "-c", str(self.ctx), "-t", str(self.threads),
-            "--no-webui",
+            "--no-webui", "-np", "1",
         ]  # fmt: skip
         if self.embedding:
             cmd += [
