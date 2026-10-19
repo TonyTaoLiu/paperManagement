@@ -2,7 +2,7 @@
 name = "papermind"
 version = "0.1.0"
 description = "PaperMind: local-first paper memory library"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115",
     "uvicorn>=0.32",
@@ -31,7 +31,7 @@ packages = ["backend/papermind"]
 
 [tool.ruff]
 line-length = 120
-target-version = "py311"
+target-version = "py312"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

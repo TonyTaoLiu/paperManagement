@@ -54,7 +54,12 @@ with sync_playwright() as p:
         page.wait_for_timeout(15000)
         shot(page, "m2-inbox")
     if "m3" in stages:
-        for name, route in [("m3-graph", "/graph"), ("m3-map", "/map"), ("m3-digests", "/digests"), ("m3-timeline", "/timeline")]:
+        for name, route in [
+            ("m3-graph", "/graph"),
+            ("m3-map", "/map"),
+            ("m3-digests", "/digests"),
+            ("m3-timeline", "/timeline"),
+        ]:
             page.goto(BASE + route)
             page.wait_for_timeout(2500)
             if name == "m3-digests":

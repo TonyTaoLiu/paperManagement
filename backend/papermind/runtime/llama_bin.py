@@ -59,7 +59,11 @@ def _extract(data: bytes, name: str, dest: Path) -> None:
     if name.endswith(".zip"):
         zipfile.ZipFile(io.BytesIO(data)).extractall(dest)
     else:
-        tarfile.open(fileobj=io.BytesIO(data), mode="r:*").extractall(dest, filter="data")
+        with tarfile.open(fileobj=io.BytesIO(data), mode="r:*") as tf:
+            try:
+                tf.extractall(dest, filter="data")
+            except tarfile.TarError:  # release archives contain relative symlinks for shared libraries
+                tf.extractall(dest, filter="tar")
 
 
 def download_release(log: Log = print) -> Path:

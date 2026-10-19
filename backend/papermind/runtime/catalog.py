@@ -45,6 +45,7 @@ EMBED_MODELS: dict[str, ModelSpec] = {
             "Qwen3-Embedding-0.6B-Q8_0.gguf",
             0.64,
             8192,
+            query_prefix="Instruct: Given a research question, retrieve the paper summary that answers it\nQuery: ",
         ),
         ModelSpec(
             "embeddinggemma-2",
@@ -53,6 +54,8 @@ EMBED_MODELS: dict[str, ModelSpec] = {
             "embeddinggemma-2-Q8_0.gguf",
             0.31,
             2048,
+            query_prefix="task: search result | query: ",
+            doc_prefix="title: none | text: ",
         ),
         ModelSpec("bge-m3", "embed", "ggml-org/bge-m3-Q8_0-GGUF", "bge-m3-q8_0.gguf", 0.63, 8192),
     ]

@@ -2,6 +2,7 @@
 import { NAlert, NButton, NCard, NSpace, NStatistic } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import SetupWizard from '../components/SetupWizard.vue'
 import { api } from '../api'
 
 const router = useRouter()
@@ -9,6 +10,9 @@ const health = ref<any>(null)
 const stats = ref<any>(null)
 const status = ref<any>(null)
 const error = ref('')
+async function onMounted_() {
+  status.value = await api('/models/status')
+}
 onMounted(async () => {
   try {
     health.value = await api('/health')
@@ -37,10 +41,7 @@ onMounted(async () => {
           <n-statistic label="待复习" :value="stats.due_cards" />
         </n-space>
       </n-card>
-      <n-alert v-if="status && (!status.embed.downloaded || !status.llama_server)" type="warning" title="还没有准备本地模型">
-        语义检索、自动分类、图谱相似边需要嵌入模型。
-        <n-button size="small" type="primary" style="margin-left: 8px" @click="router.push('/settings')">去下载</n-button>
-      </n-alert>
+      <SetupWizard v-if="status && (!status.embed.downloaded || !status.llama_server)" @done="onMounted_()" />
       <n-alert v-if="!stats.papers" type="info" title="从导入开始">
         <n-button size="small" type="primary" @click="router.push('/import')">导入聊天记录</n-button>
       </n-alert>
