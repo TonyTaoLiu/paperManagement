@@ -3,9 +3,11 @@ from __future__ import annotations
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from pydantic import BaseModel
 
+from papermind.config import load_settings
 from papermind.db.core import connect
 from papermind.embed.index import ensure_paper_embeddings
 from papermind.pipeline.ingest import import_text
+from papermind.services.metadata import EnrichUnavailable, enrich_paper
 from papermind.services.models import models
 from papermind.services.tasks import Task, get_task, start_task
 
@@ -35,6 +37,15 @@ def run_import(task: Task, raw: str, filename: str, kind: str | None, use_llm: b
             except Exception as e:  # noqa: BLE001
                 out["embed_error"] = str(e)
         out["used_llm"] = client is not None
+        if load_settings().get("enrich_metadata", True) and out["papers"]:
+            task.update(0.95, "补全元数据（OpenAlex）...")
+            done = 0
+            try:
+                for p in out["papers"]:
+                    done += enrich_paper(conn, p["id"])
+            except EnrichUnavailable:
+                task.update(message="元数据服务暂不可用，已跳过补全")
+            out["enriched"] = done
         return out
     finally:
         conn.close()

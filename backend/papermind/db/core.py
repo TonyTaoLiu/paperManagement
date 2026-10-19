@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS paper (
   doi TEXT, arxiv_id TEXT, url TEXT, code_url TEXT,
   year INTEGER, venue TEXT, abstract TEXT, paper_type TEXT, one_liner TEXT,
   verification TEXT NOT NULL DEFAULT '未核实',
-  citation_count INTEGER, read_at TEXT, status TEXT NOT NULL DEFAULT 'active',
+  citation_count INTEGER, openalex_id TEXT, refs TEXT NOT NULL DEFAULT '[]', enriched_at TEXT, read_at TEXT, status TEXT NOT NULL DEFAULT 'active',
   user_edited TEXT NOT NULL DEFAULT '[]',
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

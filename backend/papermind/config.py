@@ -13,6 +13,7 @@ DEFAULT_SETTINGS: dict = {
     "memory_tier": "8gb",  # "8gb" | "16gb"
     "hf_mirror": "",  # e.g. https://hf-mirror.com
     "cloud_llm": {"enabled": False, "base_url": "", "api_key": "", "model": ""},
+    "enrich_metadata": True,  # query OpenAlex for authors/year/abstract after import
     "llama_server_path": "",
     "external_endpoint": "",
 }
