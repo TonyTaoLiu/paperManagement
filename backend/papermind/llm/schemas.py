@@ -65,3 +65,29 @@ CLASSIFY_SYSTEM = (
 def classify_user_prompt(categories: list[tuple[str, str, str]], title: str, text: str) -> str:
     cats = "\n".join(f"{cid}. {name}：{desc}" for cid, name, desc in categories)
     return f"可选类别：\n{cats}\n\n论文标题：{title}\n\n总结文本：\n{text}\n\n请输出该论文的类别排名。"
+
+
+class SubCategory(BaseModel):
+    name: str
+    description: str
+
+
+class TopCategory(BaseModel):
+    name: str
+    description: str = Field(description="一句话描述该主题涵盖的内容，用于后续自动归类")
+    children: list[SubCategory] = Field(default_factory=list)
+
+
+class TaxonomyProposal(BaseModel):
+    categories: list[TopCategory]
+
+
+TAXONOMY_SYSTEM = "你是科研文献管理助手。根据一批论文的标题与一句话结论，提出一套主题分类体系。"
+
+
+def taxonomy_user_prompt(papers: list[tuple[str, str]]) -> str:
+    lines = "\n".join(f"- {t}：{o}" for t, o in papers)
+    return (
+        f"论文列表：\n{lines}\n\n请提出 6 到 10 个一级主题，每个一级主题下设 0 到 4 个二级主题。"
+        "每个类别写一句描述说明它包含哪类论文。类别名用中文，必要时保留英文术语。"
+    )

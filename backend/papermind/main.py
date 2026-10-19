@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from papermind import __version__
-from papermind.api import imports, models, papers, system
+from papermind.api import categories, imports, models, papers, system
 from papermind.db.core import init_db
 
 STATIC_DIR = Path(__file__).parent / "static"
@@ -22,6 +22,7 @@ def create_app() -> FastAPI:
     app.include_router(models.router)
     app.include_router(imports.router)
     app.include_router(papers.router)
+    app.include_router(categories.router)
 
     if (STATIC_DIR / "index.html").exists():
         assets = STATIC_DIR / "assets"
