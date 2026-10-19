@@ -10,6 +10,8 @@ dependencies = [
     "pydantic>=2.9",
     "numpy>=1.26",
     "tomli-w>=1.0",
+    "pyyaml>=6.0.3",
+    "python-multipart>=0.0.32",
 ]
 
 [project.scripts]
@@ -35,3 +37,6 @@ testpaths = ["tests"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
 ignore = ["E501"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.File", "fastapi.Form", "fastapi.Query"]

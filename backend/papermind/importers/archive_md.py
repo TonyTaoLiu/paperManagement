@@ -152,13 +152,15 @@ def classify_turn(turn: Turn, have_paper: bool) -> str:
     return "non_paper"
 
 
-def segment(turns: list[Turn]) -> ArchiveParse:
+def segment(turns: list[Turn], force_first: bool = False) -> ArchiveParse:
     papers: list[PaperSession] = []
     non_paper: list[Turn] = []
     by_doi: dict[str, PaperSession] = {}
     current: PaperSession | None = None
     for t in turns:
         kind = classify_turn(t, current is not None)
+        if force_first and kind == "non_paper" and current is None and not papers:
+            kind = "paper"
         if kind == "non_paper":
             non_paper.append(t)
         elif kind == "followup" and current is not None:
