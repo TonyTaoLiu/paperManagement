@@ -104,7 +104,8 @@ def build_from_source(log: Log = print) -> Path:
             check=True,
         )
     flags = ["-DCMAKE_BUILD_TYPE=Release", "-DLLAMA_CURL=OFF", "-DLLAMA_BUILD_TESTS=OFF"]
-    flags += ["-DLLAMA_BUILD_EXAMPLES=OFF", "-DGGML_NATIVE=ON"]
+    # portable build: pick the best CPU kernels at runtime instead of -march=native
+    flags += ["-DLLAMA_BUILD_EXAMPLES=OFF", "-DGGML_NATIVE=OFF", "-DGGML_BACKEND_DL=ON", "-DGGML_CPU_ALL_VARIANTS=ON"]
     log("configuring ...")
     subprocess.run(["cmake", "-S", str(src), "-B", str(src / "build"), *flags], check=True)
     log("building llama-server (several minutes) ...")
