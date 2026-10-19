@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 use_llm = "--llm" in sys.argv
+weights = next((tuple(float(x) for x in a.split("=")[1].split(",")) for a in sys.argv if a.startswith("--weights=")), None)
 tau = next((float(a.split("=")[1]) for a in sys.argv if a.startswith("--tau=")), None)
 out_dir = ROOT / "data" / "eval"
 os.environ["PAPERMIND_DATA_DIR_REAL"] = os.environ.get("PAPERMIND_DATA_DIR", str(ROOT / "data"))
@@ -34,6 +35,24 @@ fix = ROOT / "tests" / "fixtures"
 gold = json.loads((fix / "gold.json").read_text(encoding="utf-8"))["papers"]
 if tau:
     router.SOFTMAX_TAU = tau
+if weights:
+    router.W_SIM, router.W_KNN, router.W_LLM = weights
+# LLM output is deterministic (temperature 0): memoise it so weight sweeps need no extra LLM time
+_cache_path = out_dir / "llm_cache.json"
+_cache = json.loads(_cache_path.read_text()) if _cache_path.exists() else {}
+_orig = router.llm_scores
+_mode = {"m": ""}
+
+
+def _cached(conn, client, paper, cats, examples):
+    key = f"{_mode['m']}:{paper['id']}"
+    if key not in _cache:
+        _cache[key] = {str(k): v for k, v in _orig(conn, client, paper, cats, examples).items()}
+        _cache_path.write_text(json.dumps(_cache))
+    return {int(k): v for k, v in _cache[key].items()}
+
+
+router.llm_scores = _cached
 init_db()
 conn = connect()
 import_text(conn, (fix / "论文总结记录.md").read_text(encoding="utf-8"))
@@ -48,6 +67,7 @@ ensure_paper_embeddings(conn, embed_client, spec)
 llm = models.llm() if use_llm else None
 result = {"llm": models.selected("llm").id if use_llm else None, "embed": spec.id, "modes": {}}
 for mode in ("zero_shot", "leave_one_out"):
+    _mode["m"] = mode
     conn.execute("DELETE FROM paper_category")
     conn.commit()
     if mode == "leave_one_out":
