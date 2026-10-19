@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 use_llm = "--llm" in sys.argv
+tau = next((float(a.split("=")[1]) for a in sys.argv if a.startswith("--tau=")), None)
 out_dir = ROOT / "data" / "eval"
 os.environ["PAPERMIND_DATA_DIR_REAL"] = os.environ.get("PAPERMIND_DATA_DIR", str(ROOT / "data"))
 real_data = Path(os.environ["PAPERMIND_DATA_DIR_REAL"])
@@ -31,6 +32,8 @@ from papermind.services.models import models  # noqa: E402
 
 fix = ROOT / "tests" / "fixtures"
 gold = json.loads((fix / "gold.json").read_text(encoding="utf-8"))["papers"]
+if tau:
+    router.SOFTMAX_TAU = tau
 init_db()
 conn = connect()
 import_text(conn, (fix / "论文总结记录.md").read_text(encoding="utf-8"))
@@ -63,11 +66,13 @@ for mode in ("zero_shot", "leave_one_out"):
         top1 += ranked[:1] == [want]
         top3 += want in ranked[:3]
         rows.append(
-            {"paper": pid, "gold": label[pid], "decision": res.decision, "top": [s.name for s in res.suggestions[:3]]}
+            {"paper": pid, "gold": label[pid], "correct": ranked[:1] == [want], "decision": res.decision, "top": [s.name for s in res.suggestions[:3]]}
         )
         print(mode, pid, ranked[:1] == [want], res.decision, flush=True)
-    result["modes"][mode] = {"top1": top1 / len(pids), "top3": top3 / len(pids), "rows": rows}
-    print("RESULT", mode, result["modes"][mode]["top1"], result["modes"][mode]["top3"], flush=True)
-(out_dir / f"router-{'llm' if use_llm else 'embed-only'}.json").write_text(
+    auto = [r for r in rows if r["decision"] == "auto"]
+    result["modes"][mode] = {"top1": top1 / len(pids), "top3": top3 / len(pids), "rows": rows, "n_auto": len(auto), "auto_correct": sum(r["correct"] for r in auto), "n_inbox": sum(r["decision"] == "inbox" for r in rows), "tau": router.SOFTMAX_TAU}
+    m = result["modes"][mode]
+    print("RESULT", mode, m["top1"], m["top3"], "auto", m["n_auto"], "inbox", m["n_inbox"], flush=True)
+(out_dir / f"router-{'llm' if use_llm else 'embed-only'}{'-tau' + str(tau) if tau else ''}.json").write_text(
     json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8"
 )

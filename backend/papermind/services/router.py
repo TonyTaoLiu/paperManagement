@@ -15,7 +15,7 @@ from papermind.services import taxonomy
 
 W_SIM, W_KNN, W_LLM = 0.4, 0.3, 0.3
 AUTO_T, INBOX_T = 0.75, 0.5
-SOFTMAX_TAU = 0.05
+SOFTMAX_TAU = 0.02  # calibrated on the 19-paper set: sharper values keep auto-assignments precise
 KNN_K = 5
 FEW_SHOT = 3
 
