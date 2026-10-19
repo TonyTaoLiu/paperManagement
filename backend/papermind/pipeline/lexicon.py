@@ -138,3 +138,14 @@ def spot_people(text: str) -> list[str]:
                 continue
             out.append(name)
     return out
+
+
+# English search phrases for canonical entity names (recommendation queries go to English-only APIs).
+EN_QUERY = {
+    "帕金森病": "Parkinson's disease", "自适应 DBS": "adaptive deep brain stimulation", "双阈值 aDBS": "dual-threshold adaptive DBS",
+    "aperiodic 分解": "aperiodic activity spectral parameterization", "STN-LFP": "subthalamic local field potential",
+    "beta burst 分析": "beta bursts", "仿真": "neural mass model", "肌张力障碍": "dystonia deep brain stimulation",
+    "归一化连接组": "connectomics deep brain stimulation", "摊销推断": "simulation-based inference EEG",
+    "Wilson–Cowan": "Wilson-Cowan model", "Jansen–Rit": "Jansen-Rit neural mass", "DDPM": "diffusion model neural signals",
+    "FDG-PET": "FDG-PET gait", "PSG": "sleep spindles polysomnography", "ECoG": "ECoG decoding",
+}  # fmt: skip

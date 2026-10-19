@@ -14,6 +14,12 @@ DEFAULT_SETTINGS: dict = {
     "hf_mirror": "",  # e.g. https://hf-mirror.com
     "cloud_llm": {"enabled": False, "base_url": "", "api_key": "", "model": ""},
     "enrich_metadata": True,  # query OpenAlex for authors/year/abstract after import
+    "contact_email": "",  # sent to OpenAlex/PubMed as the polite-pool contact (optional)
+    "openalex_api_key": "",
+    "s2_api_key": "",
+    "rec_keywords": [],  # extra search keywords for recommendations (empty: derived from the library)
+    "rec_daily": True,
+    "rec_hour": 8,
     "llama_server_path": "",
     "external_endpoint": "",
 }

@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/3O31p/nuUe0JwLJ2vr7KnSqCSOk</id>
+  <title>arXiv Query: search_query=all:"deep brain stimulation"&amp;id_list=&amp;start=0&amp;max_results=3</title>
+  <updated>2026-10-19T01:14:50Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=all:%22deep+brain+stimulation%22&amp;start=0&amp;max_results=3&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>3</opensearch:itemsPerPage>
+  <opensearch:totalResults>124</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.22658v1</id>
+    <title>Subspace Learning with Interval-Censored Likelihoods for Dequantizing Percept PC LFP Snapshots</title>
+    <updated>2026-09-19T00:10:01Z</updated>
+    <link href="https://arxiv.org/abs/2609.22658v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.22658v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Implanted neurostimulators that sense local field potentials now enable chronic electrophysiology based biomarker tracking in patients at home. The Medtronic Percept PC, the only commercially available sensing-enabled deep brain stimulation (DBS) device, stores spectral amplitudes as 16-bit integers at approximately 0.1 $μ$V per bit (quantum $q \approx 0.11$ $μ$Vp). At frequencies where the true amplitude spans only a few quantization levels, consecutive bins round to the same stored value. Standard spectral parameterization (FOOOF, fitting oscillations and one over f), which separates periodic peaks from the aperiodic 1/f activity, treats every value as exact and fits oscillatory peaks to these plateaus. Because these spectra feed clinical biomarker pipelines and spectral foundation models for symptom decoding, spurious peaks can corrupt downstream inference. Across 9,438 spectra from 14 hemispheres in 7 subcallosal cingulate DBS patients, 20.6% of peaks detected at [2, 45] Hz have no match in ground truth synthesized by quantizing clean in-clinic BrainSense recordings, while aggregate beta band power and the aperiodic exponent are preserved. We formalize dequantization as interval-censored subspace estimation and compare five classes of correction methods. Quantized probabilistic PCA is the only tested method that reduces the spurious rate (20.6% to 18.3%) while preserving true peak detection and keeping noise floor RMSE below $q/\sqrt{12}$.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-19T00:10:01Z</published>
+    <arxiv:comment>Accepted at the 2026 IEEE International Workshop on Machine Learning for Signal Processing (MLSP), Atlanta, USA. 4 figures, 2 tables</arxiv:comment>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Shreesh Karjagi</name>
+    </author>
+    <author>
+      <name>Elif Ceren Fitoz</name>
+    </author>
+    <author>
+      <name>Maryam Khalid</name>
+    </author>
+    <author>
+      <name>Tanya Nauvel</name>
+    </author>
+    <author>
+      <name>Parisa Sarikhani</name>
+    </author>
+    <author>
+      <name>Helen S. Mayberg</name>
+    </author>
+    <author>
+      <name>Christopher J. Rozell</name>
+    </author>
+    <author>
+      <name>Sankaraleengam Alagapan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.18495v1</id>
+    <title>Impact of Phase Unwrapping on Multitarget Acoustic Lenses for Transcranial Holography</title>
+    <updated>2026-09-16T11:31:55Z</updated>
+    <link href="https://arxiv.org/abs/2609.18495v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.18495v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Acoustic lenses have been introduced recently to compensate for the phase distortions induced by the propagation across a human skull for ultrasonic deep-brain stimulation in humans. In this study, we present bifocal lenses that compensate for human skull aberrations and allow simultaneous targeting of multiple structures deep in the brain. We investigated the impact of phase unwrapping in the design of the lenses and how this process improves the distribution of pressure produced in N=5 human skulls for two different spatial arrangements of the targets. The results show that unwrapping the phase computed during the design increases the fidelity of the pressure field generated across the human skulls. The spatial precision is on average improved by 73%, and out of target energy deposition is on average reduced by 58%. The results presented in this study highlight the importance of phase unwrapping to optimize the safety and efficacy of future transcranial ultrasound stimulations targeting multiple regions.</summary>
+    <category term="physics.class-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-16T11:31:55Z</published>
+    <arxiv:primary_category term="physics.class-ph"/>
+    <arxiv:journal_ref>IEEE Transactions on Ultrasonics, Ferroelectrics and Frequency Control, 2025, 72 (7), pp.945-951</arxiv:journal_ref>
+    <author>
+      <name>D. Attali</name>
+      <arxiv:affiliation>PhysMed Paris, GHU Paris Psychiatrie et Neurosciences</arxiv:affiliation>
+    </author>
+    <author>
+      <name>T. Tiennot</name>
+      <arxiv:affiliation>PhysMed Paris</arxiv:affiliation>
+    </author>
+    <author>
+      <name>M. Tanter</name>
+      <arxiv:affiliation>PhysMed Paris</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Jean-Francois Aubry</name>
+      <arxiv:affiliation>PhysMed Paris</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.14907v1</id>
+    <title>Event-Triggered Stabilisation of Desynchronisation in Networked Oscillatory Systems</title>
+    <updated>2026-08-14T21:43:16Z</updated>
+    <link href="https://arxiv.org/abs/2608.14907v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.14907v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Pathological neuronal synchrony provides one practical motivation for studying sparse desynchronisation control in networked oscillatory systems, particularly in applications where actuation and communication are resource constrained, as in deep brain stimulation. Motivated by this challenge, we study how to stabilise desynchronisation in coupled oscillatory dynamical systems without continuously updated control, even when the oscillators' phase is unavailable. We develop a general event-triggered control framework for stabilising the desynchronised state of coupled limit-cycle oscillatory dynamical systems. Our analysis establishes a unified theoretical result showing that desynchronisation can be achieved by various feedback controllers that act sparsely and depend only on an order parameter observable. The proposed controllers admit a gradient-descent interpretation and stabilise the desynchronisation state of general phase-reduced oscillator networks. We further prove the controlled systems under event-triggered mechanisms possess a strictly positive lower bound of the inter-event dwell-time, excluding Zeno behaviour. To address the practical unavailability of exact phase reductions, we introduce a pseudo-phase construction that yields a computable order parameter from state measurements alone. Numerical studies on representative oscillator networks demonstrate the effectiveness and robustness of the proposed framework.</summary>
+    <category term="math.DS" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-14T21:43:16Z</published>
+    <arxiv:comment>23 pages, 11 figures</arxiv:comment>
+    <arxiv:primary_category term="math.DS"/>
+    <author>
+      <name>Luan Yang</name>
+    </author>
+    <author>
+      <name>Jingdong Zhang</name>
+    </author>
+    <author>
+      <name>Jeroen Lamb</name>
+    </author>
+    <author>
+      <name>Valerie Voon</name>
+    </author>
+    <author>
+      <name>Eckehard Schöll</name>
+    </author>
+    <author>
+      <name>Wei Lin</name>
+    </author>
+  </entry>
+</feed>

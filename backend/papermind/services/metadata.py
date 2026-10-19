@@ -31,7 +31,12 @@ def _cache_path(key: str):
 
 
 def _get(client: httpx.Client, path: str, params: dict | None = None, retries: int = 3) -> dict | None:
+    from papermind.config import load_settings
+
+    s = load_settings()
+    extra = {k: v for k, v in (("api_key", s.get("openalex_api_key")), ("mailto", s.get("contact_email"))) if v}
     key = path + json.dumps(params or {}, sort_keys=True)
+    params = {**(params or {}), **extra}
     cp = _cache_path(key)
     if cp.exists():
         return json.loads(cp.read_text(encoding="utf-8"))
